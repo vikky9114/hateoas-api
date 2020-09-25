@@ -7,7 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkRelation;
-import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,25 +17,26 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rest.hateoas.model.Comment;
 import com.rest.hateoas.model.Like;
 import com.rest.hateoas.model.Post;
-import com.rest.hateoas.model.User;
+import com.rest.hateoas.model.UserModel;
 
 @RestController
 @RequestMapping("/v1/user")
 public class UserController {
-	List<User> users = new ArrayList<User>();
-	User user1 = new User(1, "vivek", 30);
-	User user2 = new User(2, "ram", 25);
-	User user3 = new User(3, "kamal", 20);
+	
+	List<UserModel> users = new ArrayList<UserModel>();
+	UserModel user1 = new UserModel(1, "vivek", 30);
+	UserModel user2 = new UserModel(2, "ram", 25);
+	UserModel user3 = new UserModel(3, "kamal", 20);
 	List<Post> posts = new ArrayList<Post>();
 
 	@GetMapping("/all")
-	private List<User> getAllUsers() {
+	private List<UserModel> getAllUsers() {
 		System.out.println("tert");
 
-		Link link = ControllerLinkBuilder.linkTo(UserController.class).slash(user1.getId()).withSelfRel();
+		Link link = WebMvcLinkBuilder.linkTo(UserController.class).slash(user1.getId()).withSelfRel();
 		user1.add(link);
-		user2.add(ControllerLinkBuilder.linkTo(UserController.class).slash(user2.getId()).withSelfRel());
-		user3.add(ControllerLinkBuilder.linkTo(UserController.class).slash(user3.getId()).withSelfRel());
+		user2.add(WebMvcLinkBuilder.linkTo(UserController.class).slash(user2.getId()).withSelfRel());
+		user3.add(WebMvcLinkBuilder.linkTo(UserController.class).slash(user3.getId()).withSelfRel());
 
 		users.add(user1);
 		users.add(user2);
@@ -43,11 +45,11 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}")
-	private User getUserById(@PathVariable("id") Integer id) {
+	private UserModel getUserById(@PathVariable("id") Integer id) {
 
-		List<User> userList = users.stream().filter(user -> user.getId().equals(id)).collect(Collectors.toList());
-		User user = userList.get(0);
-		Link link = ControllerLinkBuilder.linkTo(UserController.class).slash(user.getId()).slash("posts")
+		List<UserModel> userList = users.stream().filter(user -> user.getId().equals(id)).collect(Collectors.toList());
+		UserModel user = userList.get(0);
+		Link link = WebMvcLinkBuilder.linkTo(UserController.class).slash(user.getId()).slash("posts")
 				.withRel("posts");
 		user.add(link);
 		return user;
@@ -56,15 +58,15 @@ public class UserController {
 	@GetMapping("/{id}/posts")
 	private List<Post> getPostsUserById(@PathVariable("id") Integer id) {
 		Post post1 = new Post(1, "My first Post");
-		post1.add(ControllerLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post1.getId())
+		post1.add(WebMvcLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post1.getId())
 				.withSelfRel());
 		posts.add(post1);
 		Post post2 = new Post(2, "My Second Post");
-		post2.add(ControllerLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post2.getId())
+		post2.add(WebMvcLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post2.getId())
 				.withSelfRel());
 		posts.add(post2);
 		Post post3 = new Post(3, "My Third Post");
-		post3.add(ControllerLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post3.getId())
+		post3.add(WebMvcLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post3.getId())
 				.withSelfRel());
 		posts.add(post3);
 
@@ -75,9 +77,9 @@ public class UserController {
 	private Post getPostById(@PathVariable("id") Integer id, @PathVariable("postId") Integer postId) {
 		List<Post> postList = posts.stream().filter(post -> post.getId().equals(postId)).collect(Collectors.toList());
 		Post post = postList.get(0);
-		post.add(ControllerLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post.getId())
+		post.add(WebMvcLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post.getId())
 				.slash("comments").withRel("comments"));
-		post.add(ControllerLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post.getId())
+		post.add(WebMvcLinkBuilder.linkTo(UserController.class).slash(id).slash("posts").slash(post.getId())
 				.slash("likes").withRel("likes"));
 		return post;
 	}

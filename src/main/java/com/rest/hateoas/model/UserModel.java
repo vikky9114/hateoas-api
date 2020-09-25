@@ -6,17 +6,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
-public class User extends RepresentationModel<User> {
+public class UserModel extends RepresentationModel<UserModel> {
 
 	private Integer id;
 	private String name;
 	private Integer age;
 
-	public User() {
+	public UserModel() {
 		super();
 	}
 
-	public User(Integer id, String name, Integer age) {
+	public UserModel(Integer id, String name, Integer age) {
 		super();
 		this.id = id;
 		this.name = name;
