@@ -12,34 +12,57 @@ import com.rest.hateoas.controller.UserCtl;
 import com.rest.hateoas.entity.User;
 import com.rest.hateoas.model.UserModel;
 
+/**
+ * @author 
+ *
+ */
 @Component
-public class UserAssemler extends RepresentationModelAssemblerSupport<User, UserModel>{
+public class UserAssemler extends RepresentationModelAssemblerSupport<User, UserModel> {
 
 	public UserAssemler() {
-		super(User.class,UserModel.class);
+		super(UserCtl.class, UserModel.class);
 	}
 
+	/**
+	 * Converts the given entity into a D, which extends RepresentationModel.
+	 */
 	@Override
 	public UserModel toModel(User entity) {
-		UserModel model=instantiateModel(entity);
+		UserModel model = instantiateModel(entity);
 		model.setId(entity.getId());
 		model.setAge(entity.getAge());
 		model.setName(entity.getName());
-		model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserCtl.class).getUsers()).slash(model.getId()).withSelfRel());
+		model.add(
+				WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(UserCtl.class)
+				.getUser(entity.getId()))
+				.withSelfRel());
 		return model;
 	}
 
+	/**
+	 *
+	 * Converts an Iterable or Ts into an Iterable of RepresentationModel and wraps
+	 * them in a CollectionModel instance.
+	 * 
+	 */
 	@Override
 	public CollectionModel<UserModel> toCollectionModel(Iterable<? extends User> entities) {
-		entities.forEach(entity->new UserAssemler().toModel(entity));
+		entities.forEach(entity -> new UserAssemler().toModel(entity));
 		return super.toCollectionModel(entities);
 	}
-	
-	public List<UserModel> toList(List<User> entities){
-		List<UserModel> list= new ArrayList<UserModel>();
-		for (User user : entities) {
-			list.add(toModel(user));
-		}
-	return list;
+
+	/**
+	 * 
+	 * Convert list of entity into List of model
+	 * 
+	 * @param entities
+	 * @return
+	 */
+	public List<UserModel> toList(List<User> entities) {
+		List<UserModel> list = new ArrayList<UserModel>();
+		for (User entity : entities)
+			list.add(toModel(entity));
+		return list;
 	}
 }

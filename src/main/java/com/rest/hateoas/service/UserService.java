@@ -21,4 +21,8 @@ public class UserService {
 		return repo.findById(id).orElse(null);
 	}
 
+	public Boolean deleteUser(Integer id) {
+		repo.deleteById(id);
+		return true;
+	}
 }
