@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.rest.hateoas.controller.ApplicationCtl;
-import com.rest.hateoas.controller.UserCtl;
+import com.rest.hateoas.controller.UserController;
 import com.rest.hateoas.entity.User;
 import com.rest.hateoas.model.UserModel;
 import com.rest.hateoas.service.UserService;
@@ -29,7 +29,7 @@ import com.rest.hateoas.util.UserAssemler;
 public class TestUser extends HateoasApplicationTests {
 
 	@MockBean
-	private UserCtl userCtl;
+	private UserController userCtl;
 	@MockBean
 	private UserAssemler userAssemler;
 

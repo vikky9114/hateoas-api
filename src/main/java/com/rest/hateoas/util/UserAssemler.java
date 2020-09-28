@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import com.rest.hateoas.controller.UserCtl;
+import com.rest.hateoas.controller.UserController;
 import com.rest.hateoas.entity.User;
 import com.rest.hateoas.model.UserModel;
 
@@ -21,7 +20,7 @@ import com.rest.hateoas.model.UserModel;
 public class UserAssemler extends RepresentationModelAssemblerSupport<User, UserModel> {
 
 	public UserAssemler() {
-		super(UserCtl.class, UserModel.class);
+		super(UserController.class, UserModel.class);
 	}
 
 	/**
@@ -33,10 +32,13 @@ public class UserAssemler extends RepresentationModelAssemblerSupport<User, User
 		model.setId(entity.getId());
 		model.setAge(entity.getAge());
 		model.setName(entity.getName());
-		model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserCtl.class).getUser(entity.getId()))
-				  .withSelfRel().withTitle("Get User").withType("GET"));
-		model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserCtl.class).delete(entity.getId()))
-				  .withSelfRel().withName("Delete user"));
+		model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserById(entity.getId()))
+				.withSelfRel().withTitle("Get User").withType(RequestMethod.GET.name()));
+		model.add(WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).deleteUserById(entity.getId()))
+				.withRel("Delete").withType(RequestMethod.DELETE.name()));
+		model.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).updateUser(entity))
+				.withRel("Update").withType(RequestMethod.PUT.name()));
 		return model;
 	}
 
@@ -48,7 +50,6 @@ public class UserAssemler extends RepresentationModelAssemblerSupport<User, User
 	 */
 	@Override
 	public CollectionModel<UserModel> toCollectionModel(Iterable<? extends User> entities) {
-		entities.forEach(entity -> new UserAssemler().toModel(entity));
 		return super.toCollectionModel(entities);
 	}
 
