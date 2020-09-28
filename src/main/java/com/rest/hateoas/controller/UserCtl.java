@@ -17,15 +17,23 @@ import com.rest.hateoas.model.UserModel;
 import com.rest.hateoas.service.UserService;
 import com.rest.hateoas.util.UserAssemler;
 
+/**
+ * @author 
+ *
+ */
 @RestController
 @RequestMapping("/hapi/")
 public class UserCtl {
 
 	@Autowired
 	UserService service;
+	
 	@Autowired
 	UserAssemler userAssemler;
 
+	/**
+	 * @return
+	 */
 	@GetMapping("users")
 	public ResponseEntity<List<UserModel>> getUsers() {
 		List<User> entities = service.getUsers();
@@ -33,20 +41,33 @@ public class UserCtl {
 				: new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
+	/**
+	 * @param id
+	 * @return
+	 */
 	@GetMapping("user/{id}")
 	public ResponseEntity<UserModel> getUser(@PathVariable("id") Integer id) {
 		User entity = service.getUserById(id);
-		return (entity != null) ? new ResponseEntity<UserModel>(userAssemler.toModel(entity), HttpStatus.OK)
-				: new ResponseEntity<UserModel>(HttpStatus.NOT_FOUND);
+		return (entity != null) ? new ResponseEntity<>(userAssemler.toModel(entity), HttpStatus.OK)
+				: new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
+	/**
+	 * @param id
+	 * @return
+	 */
 	@DeleteMapping("remove/{id}")
 	public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id){
 		return new ResponseEntity<>(service.deleteUser(id), HttpStatus.OK);
 	}
 	
+	/**
+	 * @param e
+	 * @return
+	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> exception(Exception e){
+		e.printStackTrace();
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
