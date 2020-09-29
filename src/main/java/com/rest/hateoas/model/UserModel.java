@@ -5,6 +5,11 @@ import org.springframework.hateoas.RepresentationModel;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+/**
+ * DTO Class to collect links.
+ * @author 
+ *
+ */
 @JsonInclude(Include.NON_NULL)
 public class UserModel extends RepresentationModel<UserModel> {
 

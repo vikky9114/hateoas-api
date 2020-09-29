@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rest.hateoas.entity.User;
 import com.rest.hateoas.model.UserModel;
 import com.rest.hateoas.service.UserService;
-import com.rest.hateoas.util.UserAssemler;
+import com.rest.hateoas.util.UserAssembler;
 
 /**
  * @author
@@ -32,7 +32,7 @@ public class UserController {
 	UserService userService;
 
 	@Autowired
-	UserAssemler userAssemler;
+	UserAssembler userAssemler;
 	
 	/**
 	 * @param user
@@ -78,6 +78,10 @@ public class UserController {
 		return new ResponseEntity<>("User deleted successfuly", HttpStatus.OK);
 	}
 
+	/**
+	 * @param user
+	 * @return
+	 */
 	@PutMapping("/user")
 	public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
 		if (userService.updateUser(user.getId(), user.getName(), user.getAge()))
@@ -90,7 +94,7 @@ public class UserController {
 	 * @return
 	 */
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<String> exception(Exception e) {
+	public ResponseEntity<String> exceptionHandler(Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
